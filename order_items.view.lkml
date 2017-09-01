@@ -48,19 +48,25 @@ view: order_items {
     drill_fields: [details*]
   }
 
-  measure: revenue_per_order {      ##total_revenue_per_order
+  measure: average_revenue_per_order {      ##total_revenue_per_order
     type: number
     sql: ${total_revenue}/${orders.count} ;;
     drill_fields: [details*]
   }
 
-  measure: average_revenue_per_order {
-    type: average
-    sql:  ;;
+  measure: profit_per_order {
+    type: sum
+    sql: ${TABLE}.sale_price - ${inventory_items.cost} ;;
   }
+
+  measure: total_profit {         ##if unknown field error make sure to join inventory_items
+    type:  number
+    sql: ${count}*(${sale_price} - ${inventory_items.cost}) ;;
+    drill_fields: [details*]
+  }
+
 
 set: details {
   fields: [order_id, inventory_item_id, sale_price]
 }
-
 }

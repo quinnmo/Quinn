@@ -13,12 +13,7 @@ explore: events {
 explore: inventory_items {}
 
 explore: orders {
-  always_filter: {
-    filters: {
-      field: status
-      value: "complete"
-    }
-  } sql_always_where: ${created_year} >= 1980;;
+  sql_always_where: ${created_year} >= 1980;;
 }
 
 explore: products {
@@ -37,7 +32,8 @@ explore: order_items {
    join: orders {
     type: left_outer
     relationship: many_to_one
-     sql_on: ${orders.id} = ${order_items.order_id};;
+    sql_on: ${orders.id} = ${order_items.order_id} AND ${orders.status} = "complete"
+    ;;
    }
 
    join: users {
@@ -56,4 +52,5 @@ explore: order_items {
     type: inner
     relationship: one_to_one
     sql_on: ${products.id} = ${inventory_items.product_id};;
-  }}
+    }
+    }
