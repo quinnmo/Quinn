@@ -1,5 +1,6 @@
 view: inventory_items {
   sql_table_name: demo_db.inventory_items ;;
+  label: "Inventory Items"
 
   dimension: id {
     primary_key: yes

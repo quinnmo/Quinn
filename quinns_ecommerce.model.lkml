@@ -14,6 +14,14 @@ explore: inventory_items {}
 
 explore: orders {
   sql_always_where: ${created_year} >= 1980;;
+  join: order_items {
+    relationship: one_to_many
+    sql_on: ${orders.id} = ${order_items.order_id} ;;
+  }
+  join: inventory_items {
+    relationship: one_to_one
+    sql_on: ${order_items.inventory_item_id} = ${inventory_items.id} ;;
+  }
 }
 
 explore: products {

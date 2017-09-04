@@ -1,5 +1,6 @@
 view: products {
   sql_table_name: demo_db.products ;;
+  label: "Products"
 
   dimension: id {
     primary_key: yes

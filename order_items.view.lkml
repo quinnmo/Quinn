@@ -1,5 +1,6 @@
 view: order_items {
   sql_table_name: demo_db.order_items ;;
+  label: "Order Items"
 
   dimension: id {
     primary_key: yes
@@ -31,40 +32,36 @@ view: order_items {
     sql: ${TABLE}.returned_at ;;
   }
 
+  dimension: returned {
+    type: yesno
+    sql: ${TABLE}.returned_at ;;
+  }
+
   dimension: sale_price {
     type: number
     sql: ${TABLE}.sale_price ;;
   }
+
 
   measure: count {
     type: count
     drill_fields: [id, inventory_items.id, orders.id]
   }
 
-  measure: total_revenue {
-    type:  sum_distinct
-    sql_distinct_key: ${id} ;;
-    sql: ${sale_price} ;;
-    drill_fields: [details*]
+  measure: returned_count {
+    type: count                   #COUNT(CASE WHEN returned = 'yes' THEN 1 ELSE null END)
+    drill_fields: [details*, returned_date]
+    filters: {
+      field: returned
+      value: "yes"
+    }
   }
 
-  measure: average_revenue_per_order {      ##total_revenue_per_order
+  measure: percent_returned {     #not working--shows 100% returned?
     type: number
-    sql: ${total_revenue}/${orders.count} ;;
-    drill_fields: [details*]
+    sql: 100.00 * ${returned_count}/ NULLIF(${count}, 0) ;;
+    value_format: "0.00"
   }
-
-  measure: profit_per_order {
-    type: sum
-    sql: ${TABLE}.sale_price - ${inventory_items.cost} ;;
-  }
-
-  measure: total_profit {         ##if unknown field error make sure to join inventory_items
-    type:  number
-    sql: ${count}*(${sale_price} - ${inventory_items.cost}) ;;
-    drill_fields: [details*]
-  }
-
 
 set: details {
   fields: [order_id, inventory_item_id, sale_price]
