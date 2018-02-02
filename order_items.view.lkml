@@ -42,6 +42,12 @@ view: order_items {
     sql: ${TABLE}.sale_price ;;
   }
 
+  dimension: sale_price_tiers {
+    type: tier
+    tiers: [0, 2, 5, 10, 50, 100]
+    sql: ${TABLE}.sale_price ;;
+  }
+
 
   measure: count {
     type: count
