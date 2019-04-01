@@ -1,7 +1,11 @@
 connection: "thelook"
 
 include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+# include: "*.dashboard.lookml"  # include all dashboards in this project
+
+datagroup: quinns_ecommerce_datagroup {
+  sql_trigger: SELECT NOW() ;;
+}
 
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
@@ -9,8 +13,6 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 explore: events {
   persist_for: "4 hours"
 }
-
-explore: inventory_items {}
 
 explore: orders {
   sql_always_where: ${created_year} >= 1980;;
